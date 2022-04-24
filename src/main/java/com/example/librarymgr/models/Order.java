@@ -1,6 +1,10 @@
 package com.example.librarymgr.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +13,10 @@ import java.util.Set;
 
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "orders")
 public class Order {
 
@@ -28,7 +36,7 @@ public class Order {
     private Patron patron;
 
     @ManyToMany
-    private Set<Book> children = new HashSet<>();
+    private Set<Book> books = new HashSet<>();
 
 
 }
