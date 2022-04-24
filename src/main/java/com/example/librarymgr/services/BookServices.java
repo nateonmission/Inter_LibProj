@@ -45,6 +45,7 @@ public class BookServices {
 
     // POST /book -Creates new book from JSON payload
     public Book createBook(BookDTO bookDTO){
+        LOGGER.info("service calling createBook ==>");
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
         book.setCategory(bookDTO.getCategory());
@@ -55,12 +56,17 @@ public class BookServices {
 
     // GET /book -Returns list of ALL books
     public List<Book> listAllBooks(){
+        LOGGER.info("service calling listAllBooks ==>");
         List<Book> books = bookRepo.findAll();
         return books;
     }
 
     //TODO GET /book/{id} -Returns individual book
-
+    public Book getBookById(long id){
+        LOGGER.info("service calling getBookById ==>");
+        Optional<Book> book = bookRepo.findById(id);
+        return book.get();
+    }
 
     //TODO POST /patron -Creates new patron from JSON payload
 

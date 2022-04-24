@@ -42,8 +42,16 @@ public class BookController {
     @CrossOrigin(origins = "*")
     @GetMapping("/books")
     public List<Book> listAllBooks() {
-        LOGGER.info("calling getBooks service from controller");
+        LOGGER.info("calling listAllBooks service from controller");
         return bookServices.listAllBooks();
+    }
+
+    // GET a book by ID
+    @CrossOrigin(origins = "*")
+    @GetMapping("/book/{id}")
+    public Book getBookById(@PathVariable Long id) {
+        LOGGER.info("calling getBookById service from controller");
+        return bookServices.getBookById(id);
     }
 
 
