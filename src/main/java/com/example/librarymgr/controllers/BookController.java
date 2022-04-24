@@ -5,6 +5,7 @@ import com.example.librarymgr.models.Book;
 import com.example.librarymgr.models.Status;
 import com.example.librarymgr.services.BookServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public class BookController {
     // POST Creates a Book
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/book")
-    public Book createBook(@RequestBody BookDTO bookDTO){
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookDTO createBook(@RequestBody BookDTO bookDTO){
         LOGGER.info("calling createBook service from controller");
         return bookServices.createBook(bookDTO);
     }
@@ -41,7 +43,7 @@ public class BookController {
     // GET All People
     @CrossOrigin(origins = "*")
     @GetMapping("/books")
-    public List<Book> listAllBooks() {
+    public List<BookDTO> listAllBooks() {
         LOGGER.info("calling listAllBooks service from controller");
         return bookServices.listAllBooks();
     }
@@ -49,9 +51,10 @@ public class BookController {
     // GET a book by ID
     @CrossOrigin(origins = "*")
     @GetMapping("/book/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public BookDTO getBookById(@PathVariable Long id) {
         LOGGER.info("calling getBookById service from controller");
-        return bookServices.getBookById(id);
+        BookDTO bookDTO = bookServices.getBookById(id);
+        return bookDTO;
     }
 
 

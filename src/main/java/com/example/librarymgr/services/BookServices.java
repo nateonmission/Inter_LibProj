@@ -6,7 +6,10 @@ import com.example.librarymgr.models.Status;
 import com.example.librarymgr.repositories.BookRepo;
 import com.example.librarymgr.repositories.OrderRepo;
 import com.example.librarymgr.repositories.PatronRepo;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;
@@ -35,6 +38,12 @@ public class BookServices {
         this.orderRepo = orderRepo;
     }
 
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+    ModelMapper mm = modelMapper();
+
     // SERVICES FOR ROUTES IN CONTROLLER
     public Status isAlive() {
         LOGGER.info("calling isAlive method ==>");
@@ -44,28 +53,31 @@ public class BookServices {
     }
 
     // POST /book -Creates new book from JSON payload
-    public Book createBook(BookDTO bookDTO){
+    public BookDTO createBook(BookDTO bookDTO){
         LOGGER.info("service calling createBook ==>");
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setCategory(bookDTO.getCategory());
-        book.setAuthor(bookDTO.getAuthor());
+        Book book = mm.map(bookDTO, Book.class);
         bookRepo.save(book);
-        return book;
+        return bookDTO;
     }
 
     // GET /book -Returns list of ALL books
-    public List<Book> listAllBooks(){
+    public List<BookDTO> listAllBooks(){
         LOGGER.info("service calling listAllBooks ==>");
         List<Book> books = bookRepo.findAll();
-        return books;
+        List<BookDTO> booksDTO = new ArrayList<>();
+
+        books.stream().forEach( b ->
+                booksDTO.add(mm.map(b, BookDTO.class))
+        );
+        return booksDTO;
     }
 
     //TODO GET /book/{id} -Returns individual book
-    public Book getBookById(long id){
+    public BookDTO getBookById(long id){
         LOGGER.info("service calling getBookById ==>");
         Optional<Book> book = bookRepo.findById(id);
-        return book.get();
+        BookDTO bookDTO = mm.map( book.get(), BookDTO.class);
+        return bookDTO;
     }
 
     //TODO POST /patron -Creates new patron from JSON payload
