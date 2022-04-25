@@ -102,7 +102,11 @@ public class BookServices {
         LOGGER.info("service calling createOrder ==>");
         LocalDate today = LocalDate.now();
         LocalDate dueDate = today.plusDays(7);
-        Patron parton = mm.map(getPatronById(orderCreateDTO.getPatronId()), Patron.class);
+
+        Long pid = orderCreateDTO.getPatronId();
+        PatronDTO patronDTO = getPatronById(pid);
+        Patron parton = mm.map(patronDTO, Patron.class);
+
         Set<Book> books = new HashSet<>();
         orderCreateDTO.getBookIdList().forEach(b ->
                 books.add(mm.map(getBookById(b), Book.class))
@@ -113,7 +117,7 @@ public class BookServices {
         order.setDateOut(today);
         order.setDateDue(dueDate);
         order.setBooks(books);
-
+        LOGGER.info(order.getPatron().getName());
         orderRepo.save(order);
 
         return getOrderById(order.getId());

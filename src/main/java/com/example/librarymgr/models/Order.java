@@ -32,7 +32,7 @@ public class Order {
     @Column
     private LocalDate dateDue;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "patron_id", referencedColumnName = "id")
     private Patron patron;
 
