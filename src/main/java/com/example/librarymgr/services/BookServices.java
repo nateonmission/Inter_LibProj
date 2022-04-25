@@ -1,8 +1,11 @@
 package com.example.librarymgr.services;
 
 import com.example.librarymgr.DTOs.BookDTO;
+import com.example.librarymgr.DTOs.OrderCreateDTO;
+import com.example.librarymgr.DTOs.OrderDTO;
 import com.example.librarymgr.DTOs.PatronDTO;
 import com.example.librarymgr.models.Book;
+import com.example.librarymgr.models.Order;
 import com.example.librarymgr.models.Patron;
 import com.example.librarymgr.models.Status;
 import com.example.librarymgr.repositories.BookRepo;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.logging.Logger;
 import java.util.*;
 
@@ -75,7 +79,7 @@ public class BookServices {
         return booksDTO;
     }
 
-    //TODO GET /book/{id} -Returns individual book
+    // GET /book/{id} -Returns individual book
     public BookDTO getBookById(long id){
         LOGGER.info("service calling getBookById ==>");
         Optional<Book> book = bookRepo.findById(id);
@@ -94,10 +98,47 @@ public class BookServices {
 
 
     //TODO POST /order -Creates new order from JSON payload
+    public OrderDTO createOrder(OrderCreateDTO orderCreateDTO){
+        LOGGER.info("service calling createOrder ==>");
+        LocalDate today = LocalDate.now();
+        LocalDate dueDate = today.plusDays(7);
+        Patron parton = mm.map(getPatronById(orderCreateDTO.getPatronId()), Patron.class);
+        Set<Book> books = new HashSet<>();
+        orderCreateDTO.getBookIdList().forEach(b ->
+                books.add(mm.map(getBookById(b), Book.class))
+        );
+
+        Order order = new Order();
+        order.setPatron(parton);
+        order.setDateOut(today);
+        order.setDateDue(dueDate);
+        order.setBooks(books);
+
+        orderRepo.save(order);
+
+        return getOrderById(order.getId());
+    }
 
 
     //TODO GET /order/{id} -Returns individual order
+    public OrderDTO getOrderById(long id){
+        LOGGER.info("service calling getOrderById ==>");
+        Optional<Order> order = orderRepo.findById(id);
+        OrderDTO orderDTO = mm.map( order.get(), OrderDTO.class);
+        return orderDTO;
+    }
 
+    // GET /book -Returns list of ALL books
+    public List<OrderDTO> listAllOrders(){
+        LOGGER.info("service calling listAllOrders ==>");
+        List<Order> orders = orderRepo.findAll();
+        List<OrderDTO> ordersDTO = new ArrayList<>();
+
+        orders.stream().forEach( o ->
+                ordersDTO.add(mm.map(o, OrderDTO.class))
+        );
+        return ordersDTO;
+    }
 
 
 

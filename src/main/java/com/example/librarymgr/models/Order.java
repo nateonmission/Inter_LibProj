@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,10 +27,10 @@ public class Order {
     private Long id;
 
     @Column
-    private Date dateOut;
+    private LocalDate dateOut;
 
     @Column
-    private Date dateDue;
+    private LocalDate dateDue;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "patron_id", referencedColumnName = "id")
