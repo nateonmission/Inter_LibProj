@@ -1,7 +1,9 @@
 package com.example.librarymgr.services;
 
 import com.example.librarymgr.DTOs.BookDTO;
+import com.example.librarymgr.DTOs.PatronDTO;
 import com.example.librarymgr.models.Book;
+import com.example.librarymgr.models.Patron;
 import com.example.librarymgr.models.Status;
 import com.example.librarymgr.repositories.BookRepo;
 import com.example.librarymgr.repositories.OrderRepo;
@@ -57,6 +59,7 @@ public class BookServices {
         LOGGER.info("service calling createBook ==>");
         Book book = mm.map(bookDTO, Book.class);
         bookRepo.save(book);
+        bookDTO = getBookById(book.getId());
         return bookDTO;
     }
 
@@ -80,8 +83,14 @@ public class BookServices {
         return bookDTO;
     }
 
-    //TODO POST /patron -Creates new patron from JSON payload
-
+    // POST /patron -Creates new patron from JSON payload
+    public PatronDTO createPatron(PatronDTO patronDTO){
+        LOGGER.info("service calling createPatron ==>");
+        Patron patron = mm.map(patronDTO, Patron.class);
+        patronRepo.save(patron);
+        patronDTO = getPatronById(patron.getId());
+        return patronDTO;
+    }
 
 
     //TODO POST /order -Creates new order from JSON payload
@@ -94,8 +103,24 @@ public class BookServices {
 
     // -----------------------------------------------
     //TODO OPT GET /patron -Returns list of all patrons
+//    public List<BookDTO> listAllBooks(){
+//        LOGGER.info("service calling listAllBooks ==>");
+//        List<Book> books = bookRepo.findAll();
+//        List<BookDTO> booksDTO = new ArrayList<>();
+//
+//        books.stream().forEach( b ->
+//                booksDTO.add(mm.map(b, BookDTO.class))
+//        );
+//        return booksDTO;
+//    }
 
     //TODO OPT GET /patron/{id} -Returns individual patron and their current books
+    public PatronDTO getPatronById(long id){
+        LOGGER.info("service calling getPatronById ==>");
+        Optional<Patron> patron = patronRepo.findById(id);
+        PatronDTO patronDTO = mm.map( patron.get(), PatronDTO.class);
+        return patronDTO;
+    }
 
 
 
