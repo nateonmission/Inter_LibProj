@@ -1,6 +1,7 @@
 package com.example.librarymgr.controllers;
 
 import com.example.librarymgr.DTOs.BookDTO;
+import com.example.librarymgr.DTOs.PatronDTO;
 import com.example.librarymgr.models.Book;
 import com.example.librarymgr.models.Status;
 import com.example.librarymgr.services.BookServices;
@@ -40,7 +41,7 @@ public class BookController {
         return bookServices.createBook(bookDTO);
     }
 
-    // GET All People
+    // GET All Books
     @CrossOrigin(origins = "*")
     @GetMapping("/books")
     public List<BookDTO> listAllBooks() {
@@ -57,6 +58,31 @@ public class BookController {
         return bookDTO;
     }
 
+    // POST Creates a Patron
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "/patron")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PatronDTO createPatron(@RequestBody PatronDTO patronDTO){
+        LOGGER.info("calling createPatron service from controller");
+        return bookServices.createPatron(patronDTO);
+    }
+
+    // GET a patron by ID
+    @CrossOrigin(origins = "*")
+    @GetMapping("/patron/{id}")
+    public PatronDTO getPatronById(@PathVariable Long id) {
+        LOGGER.info("calling getPatronById service from controller");
+        PatronDTO patronDTO = bookServices.getPatronById(id);
+        return patronDTO;
+    }
+
+    // GET All Patrons
+    @CrossOrigin(origins = "*")
+    @GetMapping("/patrons")
+    public List<PatronDTO> listAllPatrons() {
+        LOGGER.info("calling listAllPatrons service from controller");
+        return bookServices.listAllPatrons();
+    }
 
 
 }

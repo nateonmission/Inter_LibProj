@@ -101,20 +101,19 @@ public class BookServices {
 
 
 
-    // -----------------------------------------------
-    //TODO OPT GET /patron -Returns list of all patrons
-//    public List<BookDTO> listAllBooks(){
-//        LOGGER.info("service calling listAllBooks ==>");
-//        List<Book> books = bookRepo.findAll();
-//        List<BookDTO> booksDTO = new ArrayList<>();
-//
-//        books.stream().forEach( b ->
-//                booksDTO.add(mm.map(b, BookDTO.class))
-//        );
-//        return booksDTO;
-//    }
+    // OPT GET /patron -Returns list of all patrons
+    public List<PatronDTO> listAllPatrons(){
+        LOGGER.info("service calling listAllPatrons ==>");
+        List<Patron> patrons = patronRepo.findAll();
+        List<PatronDTO> patronsDTO = new ArrayList<>();
 
-    //TODO OPT GET /patron/{id} -Returns individual patron and their current books
+        patrons.stream().forEach( p ->
+                patronsDTO.add(mm.map(p, PatronDTO.class))
+        );
+        return patronsDTO;
+    }
+
+    // OPT GET /patron/{id} -Returns individual patron and their current books
     public PatronDTO getPatronById(long id){
         LOGGER.info("service calling getPatronById ==>");
         Optional<Patron> patron = patronRepo.findById(id);
